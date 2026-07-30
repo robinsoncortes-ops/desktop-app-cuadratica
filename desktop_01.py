@@ -1,38 +1,76 @@
+import cmath
 from tkinter import *
 from tkinter import messagebox
+import tkinter
 
 # funciones de app
+
+
+def A():
+    messagebox.showinfo("Información", "Este es el valor de A")
+    frame_entrada.destroy()
+def B():
+    messagebox.showinfo("Información", "Este es el valor de B")
+    frame_entrada.destroy()
+
+def C():
+    messagebox.showinfo("Información", "Este es el valor de C")
+    frame_entrada.destroy()
+
+
+def limpiar():
+    messagebox.showinfo("Información", "Se limpiaran los datos")
+    A.set("")
+    B.set("")
+    C.set("")
+    t_resultodos.delete("1.0", END)
+
 def calcular():
-    A = entry_A.get()
-    B = entry_B.get()
-    C = entry_C.get()
-
-    if A == "" or B == "" or C == "":
-        messagebox.showerror("Error", "Por favor ingrese todos los valores")
-        return
-
     try:
-        A = float(A)
-        B = float(B)
-        C = float(C)
+        va = float(A.get())
+        vb = float(B.get())
+        vc = float(C.get())
     except ValueError:
-        messagebox.showerror("Error", "Por favor ingrese valores numéricos válidos")
+        messagebox.showinfo(
+            "Cuadratica 1.0", "Por favor ingresa números válidos en A, B y C"
+        )
         return
 
-    discriminante = B**2 - 4*A*C
+    if va == 0:
+        messagebox.showinfo(
+            "Cuadratica 1.0",
+            "El valor de A no puede ser 0 (no sería una ecuación cuadrática)",
+        )
+        return
 
-    if discriminante < 0:
-        t_resultodos.delete("1.0", END)
-        t_resultodos.insert(END, "No hay soluciones reales")
-        t_resultodos_2.delete("1.0", END)
-        t_resultodos_2.insert(END, "")
+    discriminante = (vb**2) - (4 * va * vc)
+
+    t_resultodos.insert(
+        tkinter.END, f"Ecuación: {va}x² + {vb}x + {vc} = 0\n"
+    )
+    t_resultodos.insert(tkinter.END, f"Discriminante = {discriminante}\n")
+
+    if discriminante > 0:
+        raiz1 = (-vb + discriminante**0.5) / (2 * va)
+        raiz2 = (-vb - discriminante**0.5) / (2 * va)
+        t_resultodos.insert(tkinter.END, "Dos raíces reales distintas:\n")
+        t_resultodos.insert(tkinter.END, f"x1 = {raiz1}\n")
+        t_resultodos.insert(tkinter.END, f"x2 = {raiz2}\n\n")
+
+    elif discriminante == 0:
+        raiz = -vb / (2 * va)
+        t_resultodos.insert(tkinter.END, "Una raíz real (doble):\n")
+        t_resultodos.insert(tkinter.END, f"x = {raiz}\n\n")
+
     else:
-        x1 = (-B + discriminante**0.5) / (2*A)
-        x2 = (-B - discriminante**0.5) / (2*A)
-        t_resultodos.delete("1.0", END)
-        t_resultodos.insert(END, f"x1 = {x1}")
-        t_resultodos_2.delete("1.0", END)
-        t_resultodos_2.insert(END, f"x2 = {x2}")
+        raiz1 = (-vb + cmath.sqrt(discriminante)) / (2 * va)
+        raiz2 = (-vb - cmath.sqrt(discriminante)) / (2 * va)
+        t_resultodos.insert(tkinter.END, "Dos raíces complejas:\n")
+        t_resultodos.insert(tkinter.END, f"x1 = {raiz1}\n")
+        t_resultodos.insert(tkinter.END, f"x2 = {raiz2}\n\n")
+
+
+
 
 
 #------------------------------------------------
@@ -64,6 +102,12 @@ ventana_principal.config(bg="black")
 #------------------------------------------------
 ventana_principal.resizable(0,0)
 
+# variables globales
+A = StringVar()
+B = StringVar()
+C = StringVar()
+
+
 #------------------------------------------------
 # frame entrada de datos
 #------------------------------------------------
@@ -76,42 +120,41 @@ frame_1.config(bg="#BA0C2F" , width=280, height=340)
 frame_1.place(x=410,y=110)
 
 
-
 #------------------------------------------------
 # label para titulo de la app
 #------------------------------------------------
 lb_A = Label(frame_entrada, text="A = ")                        
-lb_A.config(bg="yellow", fg="blue",font=("TIME NEW ROMAN",16))
+lb_A.config(bg="#050304" , fg="blue",font=("TIME NEW ROMAN",16))
 lb_A.place(x=10, y=20)
 
 
 #------------------------------------------------
 lb_B = Label(frame_entrada, text="B = ")                        
-lb_B.config(bg="yellow", fg="blue",font=("TIME NEW ROMAN",16))
+lb_B.config(bg="#050304" , fg="blue",font=("TIME NEW ROMAN",16))
 lb_B.place(x=10, y=60)
 
 
 #------------------------------------------------
 lb_C = Label(frame_entrada, text="C = ")                        
-lb_C.config(bg="yellow", fg="blue",font=("TIME NEW ROMAN",16))
+lb_C.config(bg="#050304" , fg="blue",font=("TIME NEW ROMAN",16))
 lb_C.place(x=10, y=100)
 
 #------------------------------------------------
 # Entrada para el valor de A
 #------------------------------------------------
-entry_A = Entry(frame_entrada, textvariable="A")
+entry_A = Entry(frame_entrada, textvariable=A)
 entry_A.config(bg="white", fg="black", font=("Times New Roman",16))
 entry_A.focus_set()
 entry_A.place(x=100, y=20, width=150, height=30)
 
 #------------------------------------------------
-entry_B = Entry(frame_entrada, textvariable="B")
+entry_B = Entry(frame_entrada, textvariable=B)
 entry_B.config(bg="white", fg="black", font=("Times New Roman",16))
 entry_B.focus_set()
 entry_B.place(x=100, y=60, width=150, height=30)
 
 #------------------------------------------------
-entry_C = Entry(frame_entrada, textvariable="C")
+entry_C = Entry(frame_entrada, textvariable=C)
 entry_C.config(bg="white", fg="black", font=("Times New Roman",16))
 entry_C.focus_set()
 entry_C.place(x=100, y=100, width=150, height=30)
@@ -121,13 +164,13 @@ entry_C.place(x=100, y=100, width=150, height=30)
 #------------------------------------------------
 # boton para calcular
 #------------------------------------------------
-bt_calcular = Button(ventana_principal, text="calcular", command="calcular")
+bt_calcular = Button(ventana_principal, text="calcular", command=calcular)
 bt_calcular.place(x=50,y =400, width=150, height=30)
 
 #------------------------------------------------
 # boton para limpiar
 #------------------------------------------------
-bt_limpiar = Button(ventana_principal, text="limpiar", command="limpiar")
+bt_limpiar = Button(ventana_principal, text="limpiar", command=limpiar)
 bt_limpiar.place(x=220,y =400, width=150, height=30)
 
 # titulo de la app
@@ -148,18 +191,9 @@ frame_resultados.place(x=10,y=90)
 
 # AREA de texto para resultdos
 t_resultodos = Text(frame_resultados)
-t_resultodos.config(bg= "yellow", fg="black", font=("Arial", 28))
-t_resultodos.place(x=10, y=10, width= 200, height=50)
+t_resultodos.config(bg= "black", fg="white", font=("Arial", 10))
+t_resultodos.place(x=10, y=10, width= 250, height=200)
 
-# freme resultados 2
-frame_resultados_2 = Frame(frame_1)
-frame_resultados_2.config(bg="#BA0C2F" , width=480, height=120)
-frame_resultados_2.place(x=10,y=220)
-
-# AREA de texto para resultdos 2
-t_resultodos_2 = Text(frame_resultados_2)
-t_resultodos_2.config(bg= "yellow", fg="black", font=("Arial", 28))
-t_resultodos_2.place(x=10, y=10, width= 200, height=50)
 
 
 # bucle principal
